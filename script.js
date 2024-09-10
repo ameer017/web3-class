@@ -24,7 +24,6 @@ const walletAddresses = [
 const leaves = walletAddresses.map(x => CryptoJS.SHA256(x).toString());
 const tree = new MerkleTree(leaves, CryptoJS.SHA256);
 const root = tree.getRoot().toString('hex')
-console.log("Root:", root)
 
 check.addEventListener("click", (e) => {
     e.preventDefault()
@@ -45,7 +44,11 @@ check.addEventListener("click", (e) => {
         console.log(valid)
 
         if (valid) {
-            eligible.innerText = `Congratulations!! 🥳 You're eligible. ${valid}`;
+            eligible.innerText = `
+            Congratulations!! 🥳 You're eligible. \n
+           Validity: ${valid}\n
+           Root: ${root}
+            `;
             inEligible.innerText = "";
 
         } else {
