@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Airdrop Eligibility Checker</title>
+</head>
+
+<body>
+    <main style="display: flex; align-items: center; justify-content: center; flex-direction: column;min-height: 95vh;">
+        <h1>Airdrop Eligibility Checker</h1>
+
+        <form action="#">
+            <div
+                style="display: flex; align-items: center; justify-content: center; flex-direction: column; width: 450px; gap:  10px; padding: 10px;">
+                <label for="address" style="font-size: 25px;">
+                    Input wallet address
+                </label>
+
+                <input type="text" id="wallet"
+                    style="outline: none; padding: 5px; border: 2px solid; border-radius: 5px; width: 300px; font-size: 15px;">
+
+                <button id="check"
+                    style="padding: 5px; background-color: cadetblue; font-size: 15px; cursor: pointer; border: none; border-radius: 5px;">Check
+                    Wallet</button>
+            </div>
+            <p id="eligible" style="color: green;"></p>
+            <p id="inEligible" style="color: red;"></p>
+            <p id="error" style="color: red;"></p>
+        </form>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/merkletreejs@latest/merkletree.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"
+        integrity="sha512-a+SUDuwNzXDvz4XrIcXHuCf089/iJAoN4lmrXJg18XnduKK6YlDHNRalv4yd1N40OKI80tFidF+rqTFKGPoWFQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
