@@ -50,6 +50,8 @@ check.addEventListener("click", (e) => {
            Root: ${root}
             `;
             inEligible.innerText = "";
+            error.innerText = "";
+
 
         } else {
             inEligible.innerText = `oops! 😢 You're not eligible`;
