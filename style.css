@@ -1,0 +1,117 @@
+@import url('https://fonts.googleapis.com/css2?family=Playpen+Sans:wght@100..800&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    outline: none;
+    border: none;
+
+    font-family: "Playpen Sans";
+    font-optical-sizing: auto;
+    font-weight: 700;
+    font-style: normal;
+}
+
+body {
+    background: linear-gradient(to right, #647ae6, #9b9fd4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+main,
+form div {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    justify-content: center;
+}
+
+h1,
+label {
+    font-size: 25px;
+    text-align: center;
+}
+
+input {
+    padding: 5px;
+    background-color: #d9dbe1;
+    width: 350px;
+    font-size: 15px;
+    border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    -ms-border-radius: 5px;
+    -o-border-radius: 5px;
+}
+
+button {
+    width: 150px;
+    font-size: 15px;
+    padding: 5px;
+    animation: wobble 2s ease infinite;
+    cursor: pointer;
+}
+
+@keyframes wobble {
+    0% {
+        transform: translateX(0%);
+    }
+
+    15% {
+        transform: translateX(-25%) rotate(-5deg);
+    }
+
+    30% {
+        transform: translateX(20%) rotate(3deg);
+    }
+
+    45% {
+        transform: translateX(-15%) rotate(-3deg);
+    }
+
+    60% {
+        transform: translateX(10%) rotate(2deg);
+    }
+
+    75% {
+        transform: translateX(-5%) rotate(-1deg);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+
+form div:last-child{
+    width: 300px;
+}
+
+form div:last-child   p:first-child{
+    text-wrap: wrap;
+    width: 250px;
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+@media screen and (max-width: 400px) {
+
+    h1,
+    label {
+        font-size: 15px;
+    }
+
+    input {
+
+        width: 260px;
+        font-size: 12px;
+
+    }
+
+    form div:last-child{
+        
+        width: 250px;
+    }
+}

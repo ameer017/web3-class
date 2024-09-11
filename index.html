@@ -4,30 +4,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Airdrop Eligibility Checker</title>
 </head>
 
 <body>
-    <main style="display: flex; align-items: center; justify-content: center; flex-direction: column;min-height: 95vh;">
+    <main>
         <h1>Airdrop Eligibility Checker</h1>
 
         <form>
-            <div
-                style="display: flex; align-items: center; justify-content: center; flex-direction: column; width: 450px; gap:  10px; padding: 10px;">
-                <label for="address" style="font-size: 25px;">
+            <div>
+                <label for="address">
                     Input wallet address
                 </label>
 
-                <input type="text" id="wallet"
-                    style="outline: none; padding: 5px; border: 2px solid; border-radius: 5px; width: 300px; font-size: 15px;">
+                <input type="text" id="wallet">
 
-                <button id="check"
-                    style="padding: 5px; background-color: cadetblue; font-size: 15px; cursor: pointer; border: none; border-radius: 5px;">Check
+                <button id="check">Check
                     Wallet</button>
             </div>
-            <p id="eligible" style="color: green;"></p>
-            <p id="inEligible" style="color: red;"></p>
-            <p id="error" style="color: red;"></p>
+
+            <div>
+
+                <p id="eligible">
+
+                </p>
+                <p id="inEligible"></p>
+                <p id="error"></p>
+            </div>
         </form>
     </main>
 
