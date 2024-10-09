@@ -81,8 +81,8 @@ describe("Message Test", function () {
       const _index = 0
       console.log("Updating todo at index:", _index);
 
-      const newTitle = "Write a code"
-      const newDescription = "Write and make sure Hello world can display on the screen"
+      const newTitle = "Test Git status"
+      const newDescription = `git commit -m "Gbesoke `
 
       await todoList.updateTodo(_index, newTitle, newDescription);
 
@@ -93,6 +93,45 @@ describe("Message Test", function () {
       expect(updatedDescription).to.equal(newDescription);
       expect(updatedStatus).to.equal(2);
     })
+
+    it("Should be able to get all lists", async function () {
+      const { todoList, owner } = await loadFixture(deployTodoListFixture);
+
+      await todoList.connect(owner).getAllTodo()
+    })
+
+
+    it("Should be able to mark as complete", async function () {
+      const { todoList, owner } = await loadFixture(deployTodoListFixture);
+
+      const _title = "Checking!"
+      const _desc = "Time to check the status"
+
+      await todoList.connect(owner).createTodo(_title, _desc)
+
+      const stateUpdate = 3
+      const _index = 0
+      await todoList.connect(owner).todoComplete(_index)
+
+      const [title, description, stat] = await todoList.getTodo(_index);
+
+      expect(title).to.equal(_title)
+      expect(description).to.equal(_desc)
+      expect(stat).to.equal(stateUpdate)
+    })
+  })
+
+  it("Should be able to delete a list", async function () {
+    const { todoList, owner } = await loadFixture(deployTodoListFixture);
+
+    const _title = "Checking!"
+    const _desc = "Time to check the status"
+
+    await todoList.connect(owner).createTodo(_title, _desc)
+
+    const _index = 0
+    await todoList.connect(owner).deleteTodo(_index)
+
   })
 
 })
