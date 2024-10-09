@@ -134,4 +134,16 @@ describe("Message Test", function () {
 
   })
 
+  describe("Events", () => {
+    it("Should emit an event on todo list creation", async function () {
+      const { todoList, owner } = await loadFixture(deployTodoListFixture);
+      const title = "HOD"
+      const desc = "HOD"
+      const status = 1
+
+      await expect(todoList.createTodo(title, desc)).to.emit(todoList, "TodoCreated").withArgs(title, status)
+    })
+    
+  })
+
 })
