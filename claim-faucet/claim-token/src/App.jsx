@@ -82,7 +82,7 @@ function App() {
           </button>
         </div>
       </form>
-      if(success) {alert("Success")}
+      if(success) {alert("Token Claim Successful, check back after 24 hours")}
     </div>
   );
 }
