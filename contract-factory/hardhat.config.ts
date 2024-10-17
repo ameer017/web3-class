@@ -3,7 +3,7 @@ import "@nomicfoundation/hardhat-toolbox";
 import { vars } from "hardhat/config";
 
 const ALCHEMY_API_KEY = vars.get("ALCHEMY_API_KEY")
-const BASESCAN_API_KEY = vars.get("BASESCAN_API_KEY");
+const ETHERSCAN_API_KEY = vars.get("ETHERSCAN_API_KEY");
 
 const config: HardhatUserConfig = {
   solidity: "0.8.27",
@@ -14,17 +14,9 @@ const config: HardhatUserConfig = {
     }
   },
   etherscan: {
-    apiKey: BASESCAN_API_KEY,
-    customChains: [
-      {
-        network: "baseSepolia",
-        chainId: 84532,
-        urls: {
-          apiURL: "https://api-sepolia.basescan.org/api",
-          browserURL: "https://sepolia.basescan.org",
-        },
-      },
-    ],
+    apiKey: {
+      sepolia: ETHERSCAN_API_KEY,
+    },
   },
 };
 
