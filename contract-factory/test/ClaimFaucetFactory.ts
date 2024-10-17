@@ -1,6 +1,6 @@
 import { loadFixture } from "@nomicfoundation/hardhat-toolbox/network-helpers";
 import { expect } from "chai";
-import hre from "hardhat";
+import hre, { ethers } from "hardhat";
 
 describe("Claim Faucet Factory Test", function () {
   async function deployClaimFaucetFactoryFixture() {
@@ -58,6 +58,24 @@ describe("Claim Faucet Factory Test", function () {
 
       expect(deployedContractAddress).to.exist;
     });
+
+    it("Should fetch the token name and symbol from the deployed contract", async function () {
+      const { claimFaucetFactory } = await loadFixture(deployClaimFaucetFactoryFixture);
+
+      const _name = "EarthFi Token";
+      const _symbol = "EAFI";
+
+      // Deploy the ClaimFaucet contract and get the contract address directly
+      const tx = await claimFaucetFactory.deployClaimFaucet(_name, _symbol);
+      const receipt = await tx.wait();
+      const deployedContractAddress = await claimFaucetFactory.getAllDeployedUserContractsByIndex(0); // Retrieve the deployed contract address
+
+      const [name, symbol] = await claimFaucetFactory.getInfoFromContract(deployedContractAddress.deployedContract_);
+
+      expect(name).to.equal(_name);
+      expect(symbol).to.equal(_symbol);
+    });
+
 
 
 
