@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.27;
 
-contract DLToken {
+contract DltToken {
     //the state variables
     string tokenName;
     string tokenSymbol;
@@ -9,7 +9,7 @@ contract DLToken {
     address owner;
 
     //making an amount tracable by address
-    mapping(address user => uint256) balances;
+    mapping(address => uint256) balances;
     //making an amount tracable by address A  and address A traced by address B
     //key => (key => value)
     mapping(address => mapping(address => uint256)) allow;
@@ -79,10 +79,11 @@ contract DLToken {
         emit Approval(msg.sender, _delegate, _amountOfToken);
     }
 
-    function allowance(
-        address _owner,
-        address _delegate
-    ) external view returns (uint) {
+    function allowance(address _owner, address _delegate)
+        external
+        view
+        returns (uint256)
+    {
         return allow[_owner][_delegate];
     }
 
@@ -116,7 +117,7 @@ contract DLToken {
 
     //method called in the constructor
     function mint(uint256 _amount, address _addr) internal {
-        uint256 actualSupply = _amount * (10 ** 18);
+        uint256 actualSupply = _amount * (10**18);
         balances[_addr] = balances[_addr] + actualSupply;
 
         totalSupply = totalSupply + actualSupply;
