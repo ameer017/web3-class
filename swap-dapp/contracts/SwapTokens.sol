@@ -32,6 +32,14 @@ contract SwapToken {
         exchangeRate = _exchangeRate;
     }
 
+    // To ensure that the contract doesn't run out of both tokens
+    function depositTokens(uint256 baseAmount, uint256 celoAmount) public {
+        baseToken.transferFrom(msg.sender, address(this), baseAmount);
+        celoToken.transferFrom(msg.sender, address(this), celoAmount);
+
+        emit TokensDeposited(msg.sender, baseAmount, celoAmount);
+    }
+
     function swapBaseToCelo(uint256 _amount) public {
         require(msg.sender != address(0), "Not allowed");
         uint256 celoAmount = _amount * exchangeRate; // exchanging 2 Base with 2 as exchange rate will be 2 * 2 = 4 Celo
@@ -39,6 +47,8 @@ contract SwapToken {
             celoToken.balanceOf(address(this)) >= celoAmount,
             "Not enough Celo Token"
         ); // There should be enough token to be swapped
+
+        require(baseToken.approve(address(this), _amount), "Token approved");
 
         require(
             baseToken.transferFrom(msg.sender, address(this), _amount),
@@ -61,6 +71,8 @@ contract SwapToken {
             "Not enough Base amount"
         ); // There should be enough token to be swapped
 
+        require(celoToken.approve(address(this), _amount), "Token approved");
+
         require(
             celoToken.transferFrom(msg.sender, address(this), _amount),
             "Celo transfer failed"
@@ -73,12 +85,20 @@ contract SwapToken {
         emit SwapCelo(msg.sender, _amount, baseAmount);
     }
 
-    // To ensure that the contract doesn't run out of both tokens
-    function depositTokens(uint256 baseAmount, uint256 celoAmount) public {
-        baseToken.transferFrom(msg.sender, address(this), baseAmount);
-        celoToken.transferFrom(msg.sender, address(this), celoAmount);
+    function getBaseBalance(
+        address _baseToken
+    ) external view returns (uint256) {
+        uint256 bal = IERC20(_baseToken).balanceOf(address(this));
 
-        emit TokensDeposited(msg.sender, baseAmount, celoAmount);
+        return bal;
+    }
+
+    function getCeloBalance(
+        address _celoToken
+    ) external view returns (uint256) {
+        uint256 bal = IERC20(_celoToken).balanceOf(address(this));
+
+        return bal;
     }
 }
 
