@@ -1,7 +1,7 @@
 import "./config/connection"
 import Layout from './components/Layout'
 import CreateTodoModal from './components/CreateTodoModal'
-import Todos from './components/Todos'
+import Todos from "./components/Todos"
 
 
 function App() {

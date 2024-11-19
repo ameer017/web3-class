@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
         <h3 className="text-lg font-bold text-stone-900 ">Todo dApp</h3>
         <appkit-button size="md" />
       </header>
-      <section className="flex-1">{children}</section>
+      <section className="flex-1 p-8">{children}</section>
 
       <footer className="w-full h-20 flex justify-center items-center bg-stone-600">
         <p className="text-stone-300">
