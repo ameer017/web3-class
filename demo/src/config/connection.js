@@ -22,6 +22,11 @@ createAppKit({
   networks,
   metadata,
   projectId,
+  themeVariables: {
+    '--w3m-accent': '#1c1917',
+    '--w3m-border-radius-master': "1px"
+  },
+  themeMode: "dark",
   features: {
     analytics: true, // Optional - defaults to your Cloud configuration
   },

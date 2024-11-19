@@ -1,5 +1,7 @@
 import "./config/connection"
-import Layout from './Layout'
+import Layout from './components/Layout'
+import CreateTodoModal from './components/CreateTodoModal'
+import Todos from './components/Todos'
 
 
 function App() {
@@ -7,7 +9,8 @@ function App() {
   return (
     <>
       <Layout>
-        <h1>Todo dApp</h1>
+        <CreateTodoModal/>
+        <Todos/>
       </Layout>
       
     </>
