@@ -17,7 +17,7 @@ const Todos = () => {
       </Text> :
       todos.map((todo, index) => (
 
-        <Todo key={index} todo={todo} />
+        <Todo key={index} todo={todo} index={index} />
       ))
         }
       </section>

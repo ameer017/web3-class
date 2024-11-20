@@ -10,23 +10,29 @@ import {
   TextArea,
 } from "@radix-ui/themes";
 import { useState } from "react";
+import useEditTodo from "../hooks/useEditTodo";
 
-const Todo = ({ todo, key }) => {
+const Todo = ({ todo, index }) => {
+  const edit = useEditTodo();
   const { title, description, status } = todo;
   const [newFields, setNewFields] = useState({
-    title: "",
-    description: "",
+    newTitle: title || "",
+    newDescription: description || "",
   });
 
   const handleChange = (name, e) => {
     setNewFields((prev) => ({ ...prev, [name]: e.target.value }));
   };
 
-  const { title: newTitle, description: newDescription } = newFields;
+  const { newTitle, newDescription } = newFields;
 
-  const handleTodoUpdate = (index) => {
-    const num = Number(index);
-    console.log({ index: num, title: newTitle, description: newDescription });
+  const handleTodoUpdate = (value) => {
+    const index = Number(value);
+    edit(index, newTitle, newDescription);
+    setNewFields({
+      newTitle,
+      newDescription,
+    });
   };
 
   // console.log(todo)
@@ -101,9 +107,9 @@ const Todo = ({ todo, key }) => {
                     Todo Title
                   </Text>
                   <TextField.Root
-                    defaultValue={title}
                     placeholder="Enter a task"
-                    onChange={handleChange}
+                    value={newTitle}
+                    onChange={(e) => handleChange("newTitle", e)}
                   />
                 </label>
                 <label>
@@ -112,9 +118,9 @@ const Todo = ({ todo, key }) => {
                   </Text>
                   <TextArea
                     size="3"
-                    defaultValue={description}
+                    value={newDescription}
                     placeholder="Describe what the task is all about"
-                    onChange={handleChange}
+                    onChange={(e) => handleChange("newDescription", e)}
                   />
                 </label>
               </Flex>
@@ -125,7 +131,9 @@ const Todo = ({ todo, key }) => {
                     Cancel
                   </Button>
                 </Dialog.Close>
-                <Button onClick={handleTodoUpdate}>Submit</Button>
+                <Dialog.Close>
+                  <Button onClick={() => handleTodoUpdate(index)}>Update</Button>
+                </Dialog.Close>
               </Flex>
             </Dialog.Content>
           </Dialog.Root>

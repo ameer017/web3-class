@@ -1,55 +1,62 @@
-import React, {useCallback} from "react";
+import { useCallback } from "react";
 import useContractInstance from "./useContractInstance";
-import { toast } from "react-toastify";
-import {useTodo} from "../contexr/todoContext"
 import { useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
+import { toast } from "react-toastify";
 import { baseSepolia } from "@reown/appkit/networks";
 
-
 const useEditTodo = () => {
-    const contract = useContractInstance(true);
-    const { address, isConnected } = useAppKitAccount();
+  const contract = useContractInstance(true);
+  const { address } = useAppKitAccount();
   const { chainId } = useAppKitNetwork();
-    const {setTodos} = useTodo()
 
-    return useCallback(async(index, title, description) => {
-        if (!address || !isConnected) {
-            toast.error("Please connect wallet");
-            return;
-          }
-          if (!contract) {
-            toast.error("Contract not initialized");
-            return;
-          }
-          if (Number(chainId) !== Number(baseSepolia.id)) {
-            toast.error("Please switch network to Sepolia");
-            return;
-          }
-        try {
-            const estimatedGas = await contract.updateTodo.estimateGas(index,
-              title,
-              description
-            );
-            
-            const txn = await contract.updateTodo(index, title, description, {
-              gasLimit: (estimatedGas * BigInt(120)) / BigInt(100),
-            });
-            const receipt = await txn.wait();
-            setTodos(receipt)
-            if (receipt.status === 1) {
-              toast.success("Todo updated successfully");
-              return;
-            } else {
-              toast.error("Something went wrong, failed to update");
-            }
-          } catch (error) {
-            console.log("Error:", error);
-            toast.error("Failed to update todo");
-          }
+  return useCallback(
+    async (index, title, description) => {
+      if (!title || !description) {
+        toast.error("All fields are required");
+        return;
+      }
 
-          [contract]
-    })
+      if (!address) {
+        toast.error("Please connect your wallet");
+        return;
+      }
 
+      if (!contract) {
+        toast.error("Contract not found");
+        return;
+      }
 
-}
+      if (Number(chainId) !== Number(baseSepolia.id)) {
+        toast.error("You're not connected to baseSepolia");
+        return;
+      }
+
+      try {
+        const estimatedGas = await contract.updateTodo.estimateGas(
+          index,
+          title,
+          description
+        );
+
+        const tx = await contract.updateTodo(index, title, description, {
+          gasLimit: (estimatedGas * BigInt(120)) / BigInt(100),
+        });
+
+        const receipt = await tx.wait();
+
+        if (receipt.status === 1) {
+          toast.success("Todo updated successfully");
+          return;
+        }
+        toast.error("Failed to update todo");
+        return;
+      } catch (error) {
+        console.error("Error updating todo:", error);
+        toast.error("Failed to update todo");
+      }
+    },
+    [address, chainId, contract]
+  );
+};
+
 export default useEditTodo;
