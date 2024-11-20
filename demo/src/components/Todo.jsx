@@ -9,7 +9,27 @@ import {
   TextField,
   TextArea,
 } from "@radix-ui/themes";
-const Todo = () => {
+import { useState } from "react";
+
+const Todo = ({ todo, key }) => {
+  const { title, description, status } = todo;
+  const [newFields, setNewFields] = useState({
+    title: "",
+    description: "",
+  });
+
+  const handleChange = (name, e) => {
+    setNewFields((prev) => ({ ...prev, [name]: e.target.value }));
+  };
+
+  const { title: newTitle, description: newDescription } = newFields;
+
+  const handleTodoUpdate = (index) => {
+    const num = Number(index);
+    console.log({ index: num, title: newTitle, description: newDescription });
+  };
+
+  // console.log(todo)
   return (
     <Box className="w-full my-6">
       <Card variant="surface">
@@ -18,19 +38,19 @@ const Todo = () => {
             Title: &nbsp;
           </Text>
           <Text as="div" color="gray" size="2">
-            Reading
+            {title}
           </Text>
           <Text as="div" size="2" weight="bold">
             Description: &nbsp;
           </Text>
           <Text as="div" color="gray" size="2">
-            I need to read by 7pm ahead of Nethermind interview
+            {description}
           </Text>
           <Text as="div" size="2" weight="bold">
             Status: &nbsp;
           </Text>
           <Text as="div" color="gray" size="2">
-            Created
+            {status}
           </Text>
         </Flex>
 
@@ -81,10 +101,9 @@ const Todo = () => {
                     Todo Title
                   </Text>
                   <TextField.Root
-                    defaultValue="specialist day"
+                    defaultValue={title}
                     placeholder="Enter a task"
-                    // value={title}
-                    // // onChange={(e) => handleChange("title", e)}
+                    onChange={handleChange}
                   />
                 </label>
                 <label>
@@ -93,10 +112,9 @@ const Todo = () => {
                   </Text>
                   <TextArea
                     size="3"
-                    defaultValue="consult a specialist"
+                    defaultValue={description}
                     placeholder="Describe what the task is all about"
-                    // value={description}
-                    // onChange={(e) => handleChange("description", e)}
+                    onChange={handleChange}
                   />
                 </label>
               </Flex>
@@ -107,7 +125,7 @@ const Todo = () => {
                     Cancel
                   </Button>
                 </Dialog.Close>
-                <Button onClick={(e) => e.preventDefault()}>Submit</Button>
+                <Button onClick={handleTodoUpdate}>Submit</Button>
               </Flex>
             </Dialog.Content>
           </Dialog.Root>

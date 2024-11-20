@@ -1,12 +1,12 @@
 import { createAppKit } from "@reown/appkit/react";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
-import { baseSepolia, sepolia, scrollSepolia } from "@reown/appkit/networks";
+import { baseSepolia, sepolia } from "@reown/appkit/networks";
 
 // 1. Get projectId
 const projectId = import.meta.env.VITE_APPKIT_PROJECT_ID;
 
 // 2. Set the networks
-const networks = [baseSepolia, sepolia, scrollSepolia];
+const networks = [baseSepolia, sepolia];
 
 // 3. Create a metadata object - optional
 const metadata = {

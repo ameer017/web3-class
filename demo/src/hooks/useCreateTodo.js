@@ -3,8 +3,10 @@ import useContractInstance from "./useContractInstance";
 import { useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
 import { toast } from "react-toastify";
 import { baseSepolia } from "@reown/appkit/networks";
+// import {useTodo} from "../contexr/todoContext"
 
 const useCreateTodo = () => {
+    // const {setTodos} = useTodo()
   const contract = useContractInstance(true);
   const { address, isConnected } = useAppKitAccount();
   const { chainId } = useAppKitNetwork();
@@ -32,14 +34,12 @@ const useCreateTodo = () => {
         title,
         description
       );
-      //   const estimatedGas = await contract.estimateGas.createTodo(
-      //     title,
-      //     description
-      //   );
+      
       const txn = await contract.createTodo(title, description, {
         gasLimit: (estimatedGas * BigInt(120)) / BigInt(100),
       });
       const receipt = await txn.wait();
+      // setTodos(receipt)
       if (receipt.status === 1) {
         toast.success("Todo created successfully");
         return;
