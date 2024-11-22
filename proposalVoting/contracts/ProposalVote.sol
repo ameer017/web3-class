@@ -2,8 +2,12 @@
 pragma solidity ^0.8.27;
 
 contract ProposalVote {
-
-    enum PropsStatus{ None, Created, Pending, Accepted }
+    enum PropsStatus {
+        None,
+        Created,
+        Pending,
+        Accepted
+    }
 
     struct Proposal {
         string title;
@@ -14,16 +18,20 @@ contract ProposalVote {
         PropsStatus status;
     }
 
-    mapping (address voter => mapping (uint8 indexOfProps => bool)) hasVoted;
+    mapping(address voter => mapping(uint8 indexOfProps => bool)) hasVoted;
 
     Proposal[] public proposals;
 
     // events
-    event ProposalCreated(string indexed title, uint16 quorum);
-    event ProposalActive(string indexed title, uint16 voteCount);
-    event ProposalApproved(string indexed title, uint16 voteCount);
+    event ProposalCreated(string title, string description, uint16 quorum);
+    event ProposalActive(string title, uint16 voteCount);
+    event ProposalApproved(string title, string description, uint16 voteCount);
 
-    function createProposal(string memory _title, string memory _desc, uint16 _quorum) external {
+    function createProposal(
+        string memory _title,
+        string memory _desc,
+        uint16 _quorum
+    ) external {
         require(msg.sender != address(0), "Zero address is not allowed");
 
         Proposal memory newProposal;
@@ -34,7 +42,7 @@ contract ProposalVote {
 
         proposals.push(newProposal);
 
-        emit ProposalCreated(_title, _quorum);
+        emit ProposalCreated(_title, _desc, _quorum);
     }
 
     function voteOnProposal(uint8 _index) external {
@@ -44,8 +52,10 @@ contract ProposalVote {
 
         Proposal storage currentProposal = proposals[_index];
 
-        require(currentProposal.status != PropsStatus.Accepted, "This proposal has been accepted");
-
+        require(
+            currentProposal.status != PropsStatus.Accepted,
+            "This proposal has been accepted"
+        );
 
         currentProposal.voteCount += 1;
 
@@ -58,20 +68,37 @@ contract ProposalVote {
         if (currentProposal.voteCount >= currentProposal.quorum) {
             currentProposal.status = PropsStatus.Accepted;
 
-            emit ProposalApproved(currentProposal.title, currentProposal.voteCount);
-        } else {          
-            emit ProposalActive(currentProposal.title, currentProposal.voteCount);
+            emit ProposalApproved(
+                currentProposal.title,
+                currentProposal.description,
+                currentProposal.voteCount
+            );
+        } else {
+            emit ProposalActive(
+                currentProposal.title,
+                currentProposal.voteCount
+            );
         }
-        
     }
 
-    function getAllProposals () external view returns (Proposal[] memory) {
+    function getAllProposals() external view returns (Proposal[] memory) {
         return proposals;
     }
 
-    function getProposal(uint8 _index) external view returns (
-        string memory title_, string memory desc_, uint16 voteCount_, address[] memory voters_, uint16 quorum_, PropsStatus status_
-    ) {
+    function getProposal(
+        uint8 _index
+    )
+        external
+        view
+        returns (
+            string memory title_,
+            string memory desc_,
+            uint16 voteCount_,
+            address[] memory voters_,
+            uint16 quorum_,
+            PropsStatus status_
+        )
+    {
         require(msg.sender != address(0), "Zero address not allowed!");
         require(_index < proposals.length, "Out of bound!");
 
@@ -84,5 +111,4 @@ contract ProposalVote {
         quorum_ = currentProposal.quorum;
         status_ = currentProposal.status;
     }
-
 }
