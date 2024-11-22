@@ -1,5 +1,9 @@
-import {createContext, useContext, useState, useMemo, useCallback, useEffect} from "react"
+import {createContext, useContext, useState, useCallback, useEffect} from "react"
 import useContractInstance from "../hooks/useContractInstance";
+import { Contract } from "ethers";
+import { readOnlyProvid } from "../constants/readOnlyProvid";
+import ABI from "./../ABI/Todo.json";
+
 const TodoContext = createContext(
     {
         todos: []
@@ -52,6 +56,101 @@ export const TodoContextProvider = ({children}) => {
         getTodos()
     }, [getTodos])
 
+    const todoListUpdateHandler = useCallback((title, description, status) => {
+        setTodos((prevState) => [
+          ...prevState,
+          { title, description, status: formatEnum(status) },
+        ]);
+      }, []);
+    
+      useEffect(() => {
+        const contract = new Contract(
+          import.meta.env.VITE_TODO_CONTRACT_ADDRESS,
+          ABI,
+          readOnlyProvid
+        );
+    
+        contract.on("TodoCreated", todoListUpdateHandler);
+    
+        return () => contract.off("TodoCreated", todoListUpdateHandler);
+      }, [todoListUpdateHandler, readOnlyProvid]);
+    
+      // updating a particular todo
+    
+      const todoUpdateHandler = useCallback((index, title, description, status) => {
+        setTodos((prevState) => {
+          const updatedTodos = [...prevState];
+          updatedTodos[Number(index)] = {
+            title,
+            description,
+            status: formatEnum(status),
+          };
+    
+          return updatedTodos;
+        });
+      }, []);
+    
+      useEffect(() => {
+        const contract = new Contract(
+          import.meta.env.VITE_TODO_CONTRACT_ADDRESS,
+          ABI,
+          readOnlyProvid
+        );
+    
+        contract.on("TodoUpdated", todoUpdateHandler);
+    
+        return () => contract.off("TodoUpdated", todoUpdateHandler);
+      }, [todoUpdateHandler, readOnlyProvid]);
+    
+      // To complete todo
+    
+      const todoCompletionHandler = useCallback((index, status) => {
+        setTodos((prevState) => {
+          const updatedTodos = [...prevState];
+          updatedTodos[Number(index)] = {
+            ...updatedTodos[Number(index)],
+            status: formatEnum(status),
+          };
+    
+          return updatedTodos;
+        });
+      }, []);
+    
+      useEffect(() => {
+        const contract = new Contract(
+          import.meta.env.VITE_TODO_CONTRACT_ADDRESS,
+          ABI,
+          readOnlyProvid
+        );
+    
+        contract.on("TodoCompleted", todoCompletionHandler);
+    
+        return () => contract.off("TodoCompleted", todoCompletionHandler);
+      }, [todoCompletionHandler, readOnlyProvid]);
+    
+      // deleting todo
+    
+      const todoDeleteHandler = useCallback((index) => {
+        setTodos((prevState) => {
+          const updatedTodos = [...prevState];
+          updatedTodos.splice([Number(index)], 1);
+    
+          return updatedTodos;
+        });
+      }, []);
+    
+      useEffect(() => {
+        const contract = new Contract(
+          import.meta.env.VITE_TODO_CONTRACT_ADDRESS,
+          ABI,
+          readOnlyProvid
+        );
+    
+        contract.on("TodoDeleted", todoDeleteHandler);
+    
+        return () => contract.off("TodoDeleted", todoDeleteHandler);
+      }, [todoDeleteHandler, readOnlyProvid]);
+    
     return (
         <TodoContext.Provider value={{todos}}>
         {children}

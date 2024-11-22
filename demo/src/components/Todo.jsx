@@ -11,8 +11,12 @@ import {
 } from "@radix-ui/themes";
 import { useState } from "react";
 import useEditTodo from "../hooks/useEditTodo";
+import useDeleteTodo from "../hooks/useDeleteTodo";
+import useCompleteTodo from "../hooks/useCompleteTodo";
 
 const Todo = ({ todo, index }) => {
+  const handleDeleteTodo = useDeleteTodo();
+  const handleTodoCompleted = useCompleteTodo();
   const edit = useEditTodo();
   const { title, description, status } = todo;
   const [newFields, setNewFields] = useState({
@@ -35,6 +39,17 @@ const Todo = ({ todo, index }) => {
     });
   };
 
+  //   Method for Deleting a todo
+  const handleDelete = (value) => {
+    const index = Number(value);
+    handleDeleteTodo(index);
+  };
+
+  //   Method for Completing a todo
+  const handleDone = (value) => {
+    const index = Number(value);
+    handleTodoCompleted(index);
+  };
   // console.log(todo)
   return (
     <Box className="w-full my-6">
@@ -81,7 +96,11 @@ const Todo = ({ todo, index }) => {
                   </Button>
                 </AlertDialog.Cancel>
                 <AlertDialog.Action>
-                  <Button variant="solid" color="red">
+                  <Button
+                    onClick={() => handleDelete(index)}
+                    variant="solid"
+                    color="red"
+                  >
                     Delete
                   </Button>
                 </AlertDialog.Action>
@@ -132,7 +151,9 @@ const Todo = ({ todo, index }) => {
                   </Button>
                 </Dialog.Close>
                 <Dialog.Close>
-                  <Button onClick={() => handleTodoUpdate(index)}>Update</Button>
+                  <Button onClick={() => handleTodoUpdate(index)}>
+                    Update
+                  </Button>
                 </Dialog.Close>
               </Flex>
             </Dialog.Content>
@@ -158,7 +179,11 @@ const Todo = ({ todo, index }) => {
                   </Button>
                 </AlertDialog.Cancel>
                 <AlertDialog.Action>
-                  <Button variant="solid" color="green">
+                  <Button
+                    onClick={() => handleDone(index)}
+                    variant="solid"
+                    color="green"
+                  >
                     Yes, I have
                   </Button>
                 </AlertDialog.Action>
