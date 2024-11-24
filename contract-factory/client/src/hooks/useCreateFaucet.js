@@ -1,7 +1,7 @@
 import { useAppKitAccount, useAppKitNetwork } from "@reown/appkit/react";
 import { useCallback } from "react";
 import { toast } from "react-toastify";
-import { sepolia } from "@reown/appkit/networks";
+import { baseSepolia } from "@reown/appkit/networks";
 import useContractInstance from "./useContractInstance";
 
 const useCreateFaucet = () => {
@@ -22,8 +22,8 @@ const useCreateFaucet = () => {
       toast.error("Contract not initialized");
       return;
     }
-    if (Number(chainId) !== Number(sepolia.id)) {
-      toast.error("Please switch network to Sepolia");
+    if (Number(chainId) !== Number(baseSepolia.id)) {
+      toast.error("Please switch network to Base Sepolia");
       return;
     }
 

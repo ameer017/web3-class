@@ -1,10 +1,10 @@
 import { createAppKit } from "@reown/appkit/react";
 import { EthersAdapter } from "@reown/appkit-adapter-ethers";
-import { sepolia } from "@reown/appkit/networks";
+import { sepolia, baseSepolia } from "@reown/appkit/networks";
 
 const projectId = import.meta.env.VITE_PROJECT_ID;
 
-const networks = [sepolia];
+const networks = [sepolia, baseSepolia];
 
 const metadata = {
   name: "My Website",

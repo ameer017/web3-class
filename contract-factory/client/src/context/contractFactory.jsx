@@ -27,7 +27,7 @@ export const FaucetProvider = ({ children }) => {
     if (!readContract) return;
     try {
       const allContracts = await readContract.getAllDeployedContracts();
-      console.log("Fetched all deployed faucets:", allContracts);
+      // console.log("Fetched all deployed faucets:", allContracts);
 
       
       const formattedResponses = allContracts.map((entry) => {

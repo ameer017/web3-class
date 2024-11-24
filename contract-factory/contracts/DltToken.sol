@@ -2,30 +2,25 @@
 pragma solidity ^0.8.27;
 
 contract DltToken {
-    //the state variables
-    string tokenName;
-    string tokenSymbol;
-    uint256 totalSupply;
-    address owner;
+    string public tokenName;
+    string public tokenSymbol;
+    uint256 public totalSupply;
+    uint8 public constant decimals = 18;
+    address public owner;
 
-    //making an amount tracable by address
-    mapping(address => uint256) balances;
-    //making an amount tracable by address A  and address A traced by address B
-    //key => (key => value)
-    mapping(address => mapping(address => uint256)) allow;
+    mapping(address => uint256) private balances;
+    mapping(address => mapping(address => uint256)) private allow;
 
     constructor(string memory _name, string memory _symbol) {
         tokenName = _name;
         tokenSymbol = _symbol;
         owner = msg.sender;
-        //mint method
-        mint(1_000_000, owner);
+        mint(1_000_000 * (10 ** decimals), owner);
     }
 
-    // event for logging
     event Transfer(
         address indexed sender,
-        address indexed reciever,
+        address indexed receiver,
         uint256 amount
     );
 
@@ -35,93 +30,106 @@ contract DltToken {
         uint256 amount
     );
 
-    function getTokenName() external view returns (string memory) {
-        return tokenName;
-    }
-
-    function getSymbol() external view returns (string memory) {
-        return tokenSymbol;
-    }
-
-    function getTotalSupply() external view returns (uint256) {
-        return totalSupply;
-    }
-
-    function decimal() external pure returns (uint8) {
-        return 18;
-    }
-
-    //balance check
     function balanceOf(address _address) external view returns (uint256) {
         return balances[_address];
     }
 
-    function transfer(address _reciever, uint256 _amountOfToken) external {
-        require(_reciever != address(0), "Address is not allowed");
-
-        require(
-            _amountOfToken <= balances[msg.sender],
-            "You can't take more than what is avaliable"
-        );
+    function transfer(
+        address _receiver,
+        uint256 _amountOfToken
+    ) external returns (bool) {
+        require(_receiver != address(0), "Receiver address cannot be zero");
+        require(_amountOfToken <= balances[msg.sender], "Insufficient balance");
 
         balances[msg.sender] -= _amountOfToken;
+        balances[_receiver] += _amountOfToken;
 
-        balances[_reciever] = balances[_reciever] + _amountOfToken;
-
-        emit Transfer(msg.sender, _reciever, _amountOfToken);
+        emit Transfer(msg.sender, _receiver, _amountOfToken);
+        return true;
     }
 
-    function approve(address _delegate, uint256 _amountOfToken) external {
-        require(balances[msg.sender] > _amountOfToken, "Balance is not enough");
+    function approve(
+        address _delegate,
+        uint256 _amountOfToken
+    ) external returns (bool) {
+        require(_delegate != address(0), "Delegate address cannot be zero");
 
         allow[msg.sender][_delegate] = _amountOfToken;
-
         emit Approval(msg.sender, _delegate, _amountOfToken);
+        return true;
     }
 
-    function allowance(address _owner, address _delegate)
-        external
-        view
-        returns (uint256)
-    {
+    function allowance(
+        address _owner,
+        address _delegate
+    ) external view returns (uint256) {
         return allow[_owner][_delegate];
     }
 
     function transferFrom(
         address _owner,
-        address _buyer,
+        address _receiver,
         uint256 _amountOfToken
-    ) external {
-        //sanity check
-        require(_owner != address(0), "Address is not allowed");
-        require(_buyer != address(0), "Address is not allowed");
+    ) external returns (bool) {
+        require(_owner != address(0), "Sender address cannot be zero");
+        require(_receiver != address(0), "Receiver address cannot be zero");
+        require(
+            _amountOfToken <= balances[_owner],
+            "Insufficient balance of owner"
+        );
+        require(
+            _amountOfToken <= allow[_owner][msg.sender],
+            "Allowance exceeded"
+        );
 
-        require(_amountOfToken <= balances[_owner]);
-        require(_amountOfToken <= allow[_owner][msg.sender]);
-
-        balances[_owner] = balances[_owner] - _amountOfToken;
-
+        balances[_owner] -= _amountOfToken;
         allow[_owner][msg.sender] -= _amountOfToken;
+        balances[_receiver] += _amountOfToken;
 
-        balances[_buyer] = balances[_buyer] + _amountOfToken;
+        emit Transfer(_owner, _receiver, _amountOfToken);
+        return true;
+    }
 
-        emit Transfer(_owner, _buyer, _amountOfToken);
+    function increaseAllowance(
+        address _delegate,
+        uint256 _addedValue
+    ) external returns (bool) {
+        require(_delegate != address(0), "Delegate address cannot be zero");
+        allow[msg.sender][_delegate] += _addedValue;
+        emit Approval(msg.sender, _delegate, allow[msg.sender][_delegate]);
+        return true;
+    }
+
+    function decreaseAllowance(
+        address _delegate,
+        uint256 _subtractedValue
+    ) external returns (bool) {
+        require(_delegate != address(0), "Delegate address cannot be zero");
+        require(
+            allow[msg.sender][_delegate] >= _subtractedValue,
+            "Allowance below zero"
+        );
+        allow[msg.sender][_delegate] -= _subtractedValue;
+        emit Approval(msg.sender, _delegate, allow[msg.sender][_delegate]);
+        return true;
     }
 
     function burn(address _address, uint256 _amount) internal {
-        balances[_address] = balances[_address] - _amount;
-        totalSupply = totalSupply - _amount;
+        require(_address != address(0), "Invalid address");
+        require(_amount <= balances[_address], "Insufficient balance to burn");
+
+        balances[_address] -= _amount;
+        totalSupply -= _amount;
 
         emit Transfer(_address, address(0), _amount);
     }
 
-    //method called in the constructor
     function mint(uint256 _amount, address _addr) internal {
-        uint256 actualSupply = _amount * (10**18);
-        balances[_addr] = balances[_addr] + actualSupply;
+        require(_addr != address(0), "Invalid address");
 
-        totalSupply = totalSupply + actualSupply;
+        balances[_addr] += _amount;
+        totalSupply += _amount;
 
-        emit Transfer(address(0), _addr, actualSupply);
+        emit Transfer(address(0), _addr, _amount);
     }
 }
