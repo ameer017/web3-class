@@ -14,10 +14,10 @@ contract ClaimFaucetFactory {
 
     DeployedContractInfo[] allContracts;
 
-    function deployClaimFaucet(string memory _name, string memory _symbol)
-        external
-        returns (address contractAddress_)
-    {
+    function deployClaimFaucet(
+        string memory _name,
+        string memory _symbol
+    ) external returns (address contractAddress_) {
         require(msg.sender != address(0), "Zero Address not allowed");
 
         address _address = address(new ClaimFaucet(_name, _symbol));
@@ -49,11 +49,9 @@ contract ClaimFaucetFactory {
         return allUserDeployedContracts[msg.sender];
     }
 
-    function getAllDeployedUserContractsByIndex(uint8 _index)
-        external
-        view
-        returns (address deployer_, address deployedContract_)
-    {
+    function getAllDeployedUserContractsByIndex(
+        uint8 _index
+    ) external view returns (address deployer_, address deployedContract_) {
         require(
             _index < allUserDeployedContracts[msg.sender].length,
             "out of bound!"
@@ -71,11 +69,9 @@ contract ClaimFaucetFactory {
         return len;
     }
 
-    function getInfoFromContract(address _claimFaucet)
-        external
-        view
-        returns (string memory, string memory)
-    {
+    function getInfoFromContract(
+        address _claimFaucet
+    ) external view returns (string memory, string memory) {
         return (
             IERC20(_claimFaucet).getTokenName(),
             IERC20(_claimFaucet).getSymbol()
@@ -86,11 +82,9 @@ contract ClaimFaucetFactory {
         IERC20(_claimFaucet).claimToken(msg.sender);
     }
 
-    function claimFaucetBalance(address _claimFaucet)
-        external
-        view
-        returns (uint256)
-    {
+    function claimFaucetBalance(
+        address _claimFaucet
+    ) external view returns (uint256) {
         uint256 bal = IERC20(_claimFaucet).balanceOf(msg.sender);
 
         return bal;
