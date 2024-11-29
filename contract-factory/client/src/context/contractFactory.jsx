@@ -14,6 +14,7 @@ const FaucetContext = createContext({
   getTokenInfo: async () => {},
   claimFaucet: async () => {},
   getUserFaucetBalance: async () => {},
+  getAllBalances: async () => {},
 });
 
 export const FaucetProvider = ({ children }) => {
