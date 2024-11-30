@@ -45,7 +45,7 @@ const useCreateProposal = () => {
         toast.error("Something went wrong, failed to create");
       }
     } catch (error) {
-        console.error("Error from creating todo", error);
+        console.error("Error from creating proposal", error);
     }
   });
 };
