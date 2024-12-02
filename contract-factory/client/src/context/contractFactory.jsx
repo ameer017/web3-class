@@ -6,6 +6,7 @@ import {
   useEffect,
 } from "react";
 import useContractInstance from "../hooks/useContractInstance";
+import { useAppKitAccount } from "@reown/appkit/react";
 
 const FaucetContext = createContext({
   faucets: [],
@@ -21,6 +22,8 @@ export const FaucetProvider = ({ children }) => {
   const [faucets, setFaucets] = useState([]);
   const [userFaucets, setUserFaucets] = useState([]);
   const [totalContracts, setTotalContracts] = useState(0);
+  const { address } = useAppKitAccount()
+
 
   const readContract = useContractInstance();
 
@@ -75,24 +78,10 @@ export const FaucetProvider = ({ children }) => {
         const [name, symbol] = await readContract.getInfoFromContract(
           contractAddress
         );
-        // console.log("Fetched token info:", { name, symbol });
+        console.log("Fetched token info:", { name, symbol });
         return { name, symbol };
       } catch (error) {
         console.error("Error fetching token info", error);
-      }
-    },
-    [readContract]
-  );
-
-  const claimFaucet = useCallback(
-    async (contractAddress) => {
-      if (!readContract) return;
-      try {
-        const txn = await readContract.claimFaucetFromContract(contractAddress);
-        const receipt = await txn.wait();
-        console.log("Faucet claimed successfully:", receipt);
-      } catch (error) {
-        console.error("Error claiming faucet", error);
       }
     },
     [readContract]
@@ -128,7 +117,6 @@ export const FaucetProvider = ({ children }) => {
         userFaucets,
         totalContracts,
         getTokenInfo,
-        claimFaucet,
         getUserFaucetBalance,
       }}
     >

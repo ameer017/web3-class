@@ -7,6 +7,25 @@
 				"type": "address"
 			}
 		],
+		"name": "claimFaucetBalance",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
+				"internalType": "address",
+				"name": "_claimFaucet",
+				"type": "address"
+			}
+		],
 		"name": "claimFaucetFromContract",
 		"outputs": [],
 		"stateMutability": "nonpayable",
@@ -37,25 +56,6 @@
 		"type": "function"
 	},
 	{
-		"inputs": [
-			{
-				"internalType": "address",
-				"name": "_claimFaucet",
-				"type": "address"
-			}
-		],
-		"name": "claimFaucetBalance",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
-		"type": "function"
-	},
-	{
 		"inputs": [],
 		"name": "getAllDeployedContracts",
 		"outputs": [
@@ -82,7 +82,7 @@
 	},
 	{
 		"inputs": [],
-		"name": "getAllDeployedUserContracts",
+		"name": "getAllUserDeployedContracts",
 		"outputs": [
 			{
 				"components": [
@@ -113,7 +113,7 @@
 				"type": "uint8"
 			}
 		],
-		"name": "getAllDeployedUserContractsByIndex",
+		"name": "getAllUserDeployedContractsByIndex",
 		"outputs": [
 			{
 				"internalType": "address",
